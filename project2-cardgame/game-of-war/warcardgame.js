@@ -28,6 +28,7 @@ class Deck {
     this.length = 52;
   }
 
+  //make a deck consisting of 52 cards of 4 different suits, 13 different scores and ranks
   makeDeck() {
     let rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
     let score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
@@ -39,6 +40,7 @@ class Deck {
       }
     }
   }
+
   //using Fisher-Yates shuffle method for the most efficient shuffle
   shuffleDeck(cards) {
     var randomCards = this.cards.length, randomCardIndex;
@@ -55,16 +57,18 @@ class Deck {
     }
     return cards;
   }
-
-  dealCards() {
-    this.dealCards = this.cards[Math.floor(Math.random() * this.length)];
-    return this.dealCards;
-  }
 }
 
-let deck = new Deck();
-deck.makeDeck();
+playGame();
+
+function playGame() {
+  const deck = new Deck();
+  deck.shuffleDeck();
+}
+
+//let deck = new Deck();
+//deck.makeDeck();
 //console.log(deck.cards);
 //console.log(deck.drawCard());
-deck.shuffleDeck();
-console.log(deck.cards);
+//deck.shuffleDeck();
+//console.log(deck.cards);
