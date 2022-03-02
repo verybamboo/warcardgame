@@ -8,9 +8,21 @@ class Card {
 }
 
 class Player {
-  constructor(name, deck) {
+  constructor(name, deck, lastPlayed) {
     this.name = name;
     this.deck = deck;
+    this.lastPlayed = lastPlayed;
+  }
+
+  //takes top card of deck  
+  playCard() {
+    this.lastPlayed = this.deck[this.deck.length - 1]
+    return this.deck.shift();
+  }
+
+  //winner has both cards put back into the bottom of the deck
+  winCard(card) {
+    return this.deck.push(card);
   }
 }
 
@@ -65,9 +77,8 @@ class Deck {
 //Runs the games by comparing the score value of the cards and also dealing with declaring war when two of
 //same cards are played
 
-
-
 playGame();
+
 function playGame() {
   const deck = new Deck();
   deck.shuffleDeck();
@@ -76,13 +87,22 @@ function playGame() {
   // const halfDeck = Math.ceil(deck.fullDeck / 2);
   let p1Deck = new Player("PlayerOne", deck.cards.slice(0, 26));
   let p2Deck = new Player("PlayerTwo", deck.cards.slice(26, 52));
-
-  //console.log(deck.cards);
-  console.log(p1Deck.name);
-  console.log(p1Deck.deck);
-  //console.log(p2Deck);
+  p1Deck.playCard()
+  console.log(p2Deck.deck.length);
+  console.log(p1Deck.lastPlayed)
+  //console.log(p1Deck.name, p1Deck.deck);
+  //console.log(p2Deck.name, p2Deck.deck);
 }
 
+//each player plays 1 card
+function playingRound(playerOne, playerTwo) {
+
+}
+
+function whoWon() {
+  //pseudocode 
+  if p1Deck.lastplayed.score > p2deck.lastplayed.score;
+}
 //let deck = new Deck();
 //deck.makeDeck();
 //console.log(deck.cards);
