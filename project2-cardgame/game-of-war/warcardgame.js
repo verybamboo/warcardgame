@@ -116,9 +116,12 @@ class War {
   roundWinner() {
     if (this.players[0].playedCards[0].score > this.players[1].playedCards[0].score) {
       this.winCard(0, 1);
+      //  console.log(`${this.players[0].name} played the bigger card! They win this battle!`)
     } else if (this.players[0].playedCards[0].score < this.players[1].playedCards[0].score) {
       this.winCard(1, 0);
+      //  console.log(`${this.players[1].name} played the bigger card! They win this battle!`)
     } else if (this.players[0].playedCards[0].score == this.players[1].playedCards[0].score) {
+      console.log(`${this.players[0].name} and ${this.players[1].name} both played the same card. It's a tie! Time for war!`)
       this.declareWar();
     } else {
       if (this.players[0].hand.length === 52) {
@@ -133,7 +136,7 @@ class War {
   //If a tie happens, it triggers this function to declare a war, both players will play their top 3 cards, I used a for loop to
   //start at the 0 index and stop at the 2nd index
   declareWar() {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       if (i >= this.players[0].hand.length - 1) {
       } else {
         this.pile.unshift(this.players[0].hand[0]);
@@ -141,7 +144,7 @@ class War {
         //  console.log(`${this.players[0].name} plays} ` + this.players[1].hand.shift());
       }
     }
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       if (i >= this.players[1].hand.length - 1) {
       } else {
         this.pile.unshift(this.players[1].hand[0]);
@@ -149,35 +152,36 @@ class War {
         //  console.log(`${this.players[1].name} plays} ` + this.players[1].hand.shift());
       }
     }
-    console.log("WE DECLARE WAR");
+    console.log("💥WE DECLARE WAR!!!💥");
     this.playCard();
   }
 
-  //winner has both cards put back into the bottom of their hand and the game declares the winner of the round.
-  winCard(x, y) {
-    this.players[x].hand.push(...this.players[x].playedCards, ...this.players[y].playedCards);
-    this.players[x].hand.push(...this.pile);
+  //winner has both cards put back into the bottom of their hand and the game declares the winner of the round. I have put a bunch of messages
+  //to map out who is winning and why. The two arguments are w = winner, l = loser
+  winCard(w, l) {
+    this.players[w].hand.push(...this.players[w].playedCards, ...this.players[l].playedCards);
+    this.players[w].hand.push(...this.pile);
     this.pile = [];
-    this.players[x].playedCards = [];
-    this.players[y].playedCards = [];
-    console.log(`${this.players[x].name} won this round! They have ${this.players[x].hand.length} cards now.`);
-    console.log(`${this.players[y].name} lost this round! They have ${this.players[y].hand.length} cards now.`);
+    this.players[w].playedCards = [];
+    this.players[l].playedCards = [];
+    console.log(`${this.players[w].name} played the bigger card while ${this.players[l].name} played the smaller card. ${this.players[w].name} wins this battle!`)
+    console.log(`${this.players[w].name} won this round! They have ${this.players[w].hand.length} cards now. ${this.players[l].name} lost this round! They have ${this.players[l].hand.length} cards now.`);
     this.whoWon();
   }
 
   whoWon() {
-    while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
-      this.playGame();
-    }
     if (this.players[0].hand.length === 52) {
       this.winner(this.players[0].name)
     } else if (this.players[1].hand.length === 52) {
       this.winner(this.players[0].name)
     }
+    while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
+      this.playGame();
+    }
   }
 
   winner(players) {
-    console.log(`${players} has won the war.`);
+    console.log(`${players} HAS WON THE WAR!. 💥🎉🎊`);
   }
 }
 
