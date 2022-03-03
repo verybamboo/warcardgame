@@ -49,7 +49,8 @@ class Deck {
     return this.cards;
   }
 
-  //using Fisher-Yates shuffle method for the most efficient shuffle
+  //using Fisher-Yates shuffle method for the most efficient shuffle, I read documentation on it and it runs better than what I
+  //I was trying to write
   shuffleDeck() {
     var randomCards = this.cards.length, randomCardIndex;
 
@@ -67,7 +68,9 @@ class Deck {
   }
 }
 
-//Cleaner to put the play game function into a class
+//Cleaner to put the play game function into a class that encompasses the whole game, it made it much easier to run all the
+//functions instead of in tandem. However, apparently in JS, it's better to just have more functions so it was harder for me
+//to visualize what is happening in order
 class War {
   constructor(round, pile, players, deck) {
     this.pile = [];
@@ -78,7 +81,8 @@ class War {
   }
 
   //deal cards to both players in sequence using unshift to put the dealt card on the top of the pile each time
-  //a card is dealt
+  //a card is dealt, i is divided by 2, if it's even, first player gets 1 card and if odd player 2 gets 1, since i always goes down
+  //1 at a time in sequence, it will always aternate between odd and even 
   dealCards() {
     for (let i = 0; i < this.deck.length; i++) {
       if (i % 2 === 0) {
