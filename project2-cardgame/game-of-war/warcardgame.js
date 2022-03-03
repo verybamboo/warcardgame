@@ -8,18 +8,17 @@ class Card {
 }
 
 class Player {
-  constructor(name, deck, lastPlayed) {
+  constructor(name, deck) {
     this.name = name;
     this.deck = deck;
     this.hand = [];
-    this.lastPlayed = lastPlayed;
     this.playedCards = [];
   }
 }
 
-const rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
-const score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-const suit = ['♦️', '♣️', '❤️', '♠️'];
+// const rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
+// const score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+// const suit = ['♦️', '♣️', '❤️', '♠️'];
 
 //create a deck class that will have all the functions
 class Deck {
@@ -36,12 +35,14 @@ class Deck {
 
   //make a deck consisting of 52 cards of 4 different suits, 13 different scores and ranks
   makeDeck() {
-    // let rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
-    // let score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    // let suit = ['♦️', '♣️', '❤️', '♠️'];
-    for (let i = 0; i < suit.length; i++) {
-      for (let j = 0; j < rank.length; j++) {
-        let card = new Card(suit[i], rank[j], score[j]);
+    this.rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
+    this.score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    this.suit = ['♦️', '♣️', '❤️', '♠️'];
+    this.cards = [];
+    this.length = 52;
+    for (let i = 0; i < this.suit.length; i++) {
+      for (let j = 0; j < this.rank.length; j++) {
+        let card = new Card(this.suit[i], this.rank[j], this.score[j]);
         this.cards.push(card);
       }
     }
@@ -67,11 +68,11 @@ class Deck {
 }
 
 //Cleaner to put the play game function into a class
-class Game {
+class War {
   constructor(round, pile, players, deck) {
-    this.round = 0;
     this.pile = [];
     this.players = [new Player("Fast Draw McGee"), new Player("Wild Wild West")];
+    this.round = 0;
     this.deck = new Deck();
     this.deck.shuffleDeck();
   }
@@ -83,18 +84,25 @@ class Game {
       if (i % 2 === 0) {
         this.players[0].hand.unshift(this.deck.cards[i])
       } else {
-        this.players[i].hand.unshift(this.cards.cards[i])
+        this.players[1].hand.unshift(this.deck.cards[i])
       }
     }
     this.deck = [];
+    this.playCard();
+  }
+
+  //starts game and adds 1 to the round counter and displays current round
+  playGame() {
+    this.round += 1;
+    console.log(`Round ${this.round} start!`)
+    this.playCard();
   }
 
   //each player plays a card from the top of their hand (an array) into a new array called played cards so they can
   //be compared, the played card is then removed from the hands of both players and logged to show what they are
   playCard() {
-    this.lastPlayed = this.deck[this.deck.length - 1]
     this.players[0].playedCards.unshift(this.players[0].hand[0]);
-    this.players[1].playedCards.unshift(this.players[1].hand[0]]);
+    this.players[1].playedCards.unshift(this.players[1].hand[0]);
     this.players[0].hand.shift();
     this.players[1].hand.shift();
     console.log(`${this.players[0].name} played ${this.players[0].playedCards[0].rank} of ${this.players[0].playedCards[0].suit}`);
@@ -117,31 +125,47 @@ class Game {
         this.winner(this.players[0].name)
       } else if (this.players[1].hand.length === 52) {
         this.winner(this.players[1].name)
+      } else {
+        this.playGame();
       }
     }
   }
-
-  //winner has both cards put back into the bottom of their hand
-  winCard(card) {
-
-  }
-
-  //starts game and adds 1 to the round counter
-  playGame() {
-    this.round += 1;
+  //If a tie happens, it triggers this function to declare a war, both players will play their top 3 cards, I used a for loop to
+  //start at the 0 index and stop at the 2nd index
+  declareWar() {
+    for (let i = 0; i < 3; i++) {
+      this.players[0].playedCards.unshift(this.players[0].hand[0]);
+      this.players[1].playedCards.unshift(this.players[1].hand[0]);
+    }
+    console.log("I declare war");
     this.playCard();
   }
 
-  //winner has both cards put back into the bottom of the deck
-  winCard(card) {
-    return this.deck.push(card);
+  //winner has both cards put back into the bottom of their hand and the game declares the winner of the round.
+  winCard(x, y) {
+    this.pile = [];
+    this.players[x].playedCards = [];
+    this.players[y].playedCards = [];
+    this.players[x].hand.push(...this.players[x].playedCards, ...this.players[y].playedCards);
+    this.players[x].hand.push(...this.pile);
+    console.log(`${this.players[x].name} won this round! They have ${this.players[x].hand.length} cards now.`);
+  }
+
+  winner(players) {
+    console.log(`${players} has won the war.`);
   }
 }
+
+let war = new War();
+war.dealCards();
+
+while
+
 
 //Starts game off by making a 52 card deck, shuffles it and then gives equal halves to the two players.
 //Runs the games by comparing the score value of the cards and also dealing with declaring war when two of
 //same cards are played
-playGame();
+// playGame();
 
 // function playGame() {
 //   const deck = new Deck();
