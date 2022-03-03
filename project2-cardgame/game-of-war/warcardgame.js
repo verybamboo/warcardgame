@@ -102,18 +102,18 @@ class War {
   //be compared, the played card is then removed from the hands of both players and logged to show what they are
   playCard() {
     this.players[0].playedCards.unshift(this.players[0].hand[0]);
-    this.players[1].playedCards.unshift(this.players[1].hand[0]);
     this.players[0].hand.shift();
+    this.players[1].playedCards.unshift(this.players[1].hand[0]);
     this.players[1].hand.shift();
     console.log(`${this.players[0].name} played ${this.players[0].playedCards[0].rank} of ${this.players[0].playedCards[0].suit}`);
     console.log(`${this.players[1].name} played ${this.players[1].playedCards[0].rank} of ${this.players[1].playedCards[0].suit}`);
-    this.whoWon();
+    this.roundWinner();
   }
 
   //compare both players cards and their scores, the winner with the higher score wins both cards, the method also checks for ties in
   //which case a war will be declared. at the end of the method, it checks for the length of the hand of each player and the moment
   //a player gets to 52, the game declares them a winner
-  whoWon() {
+  roundWinner() {
     if (this.players[0].playedCards[0].score > this.players[1].playedCards[0].score) {
       this.winCard(0, 1);
     } else if (this.players[0].playedCards[0].score < this.players[1].playedCards[0].score) {
@@ -133,22 +133,47 @@ class War {
   //If a tie happens, it triggers this function to declare a war, both players will play their top 3 cards, I used a for loop to
   //start at the 0 index and stop at the 2nd index
   declareWar() {
-    for (let i = 0; i < 3; i++) {
-      this.players[0].playedCards.unshift(this.players[0].hand[0]);
-      this.players[1].playedCards.unshift(this.players[1].hand[0]);
+    for (let i = 0; i < 2; i++) {
+      if (i >= this.players[0].hand.length - 1) {
+      } else {
+        this.pile.unshift(this.players[0].hand[0]);
+        this.players[0].hand.shift();
+        //  console.log(`${this.players[0].name} plays} ` + this.players[1].hand.shift());
+      }
     }
-    console.log("I declare war");
+    for (let i = 0; i < 2; i++) {
+      if (i >= this.players[1].hand.length - 1) {
+      } else {
+        this.pile.unshift(this.players[1].hand[0]);
+        this.players[1].hand.shift();
+        //  console.log(`${this.players[1].name} plays} ` + this.players[1].hand.shift());
+      }
+    }
+    console.log("WE DECLARE WAR");
     this.playCard();
   }
 
   //winner has both cards put back into the bottom of their hand and the game declares the winner of the round.
   winCard(x, y) {
+    this.players[x].hand.push(...this.players[x].playedCards, ...this.players[y].playedCards);
+    this.players[x].hand.push(...this.pile);
     this.pile = [];
     this.players[x].playedCards = [];
     this.players[y].playedCards = [];
-    this.players[x].hand.push(...this.players[x].playedCards, ...this.players[y].playedCards);
-    this.players[x].hand.push(...this.pile);
     console.log(`${this.players[x].name} won this round! They have ${this.players[x].hand.length} cards now.`);
+    console.log(`${this.players[y].name} lost this round! They have ${this.players[y].hand.length} cards now.`);
+    this.whoWon();
+  }
+
+  whoWon() {
+    while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
+      this.playGame();
+    }
+    if (this.players[0].hand.length === 52) {
+      this.winner(this.players[0].name)
+    } else if (this.players[1].hand.length === 52) {
+      this.winner(this.players[0].name)
+    }
   }
 
   winner(players) {
@@ -156,45 +181,8 @@ class War {
   }
 }
 
-let war = new War();
-war.dealCards();
-
-while
-
-
 //Starts game off by making a 52 card deck, shuffles it and then gives equal halves to the two players.
 //Runs the games by comparing the score value of the cards and also dealing with declaring war when two of
 //same cards are played
-// playGame();
-
-// function playGame() {
-//   const deck = new Deck();
-//   deck.shuffleDeck();
-
-//   //Split the randomly generated deck into 2 equal halves for the players
-//   // const halfDeck = Math.ceil(deck.fullDeck / 2);
-//   let p1Deck = new Player("PlayerOne", deck.cards.slice(0, 26));
-//   let p2Deck = new Player("PlayerTwo", deck.cards.slice(26, 52));
-//   p1Deck.playCard()
-//   console.log(p2Deck.deck.length);
-//   console.log(p1Deck.lastPlayed)
-//   //console.log(p1Deck.name, p1Deck.deck);
-//   //console.log(p2Deck.name, p2Deck.deck);
-//   console.log(deck.cards);
-// }
-
-//each player plays 1 card
-//function playingRound(playerOne, playerTwo) {
-//
-//}
-
-//function whoWon() {
-//pseudocode
-//  if p1Deck.lastplayed.score > p2deck.lastplayed.score;
-//}
-//let deck = new Deck();
-//deck.makeDeck();
-//console.log(deck.cards);
-//console.log(deck.drawCard());
-//deck.shuffleDeck();
-//console.log(deck.cards);
+let war = new War();
+war.dealCards();
