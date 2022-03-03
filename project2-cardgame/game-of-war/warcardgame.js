@@ -71,7 +71,7 @@ class Deck {
 class War {
   constructor(round, pile, players, deck) {
     this.pile = [];
-    this.players = [new Player("Fast Draw McGee"), new Player("Wild Wild West")];
+    this.players = [new Player("Fast Draw McGee"), new Player("Wild Wile West")];
     this.round = 0;
     this.deck = new Deck();
     this.deck.shuffleDeck();
@@ -91,15 +91,15 @@ class War {
     this.playCard();
   }
 
-  //starts game and adds 1 to the round counter and displays current round
+  //starts game, adds 1 to the round counter and displays current round
   playGame() {
     this.round += 1;
     console.log(`Round ${this.round} start!`)
     this.playCard();
   }
 
-  //each player plays a card from the top of their hand (an array) into a new array called played cards so they can
-  //be compared, the played card is then removed from the hands of both players and logged to show what they are
+  //each player plays a card from the top of their hand (an array) into a new array called played cards(which each player has one) so they can
+  //be compared to each other, the played card is then removed from the hands of both players, I console logged to show what they are
   playCard() {
     this.players[0].playedCards.unshift(this.players[0].hand[0]);
     this.players[0].hand.shift();
@@ -169,19 +169,21 @@ class War {
     this.whoWon();
   }
 
+  //if statement to check when either player hits 52, then determine them as the winner. while the condition is not met, continue looping and
+  //playing the game.
   whoWon() {
     if (this.players[0].hand.length === 52) {
       this.winner(this.players[0].name)
     } else if (this.players[1].hand.length === 52) {
-      this.winner(this.players[0].name)
+      this.winner(this.players[1].name)
     }
     while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
       this.playGame();
     }
   }
 
-  winner(players) {
-    console.log(`${players} HAS WON THE WAR!. 💥🎉🎊`);
+  winner(player) {
+    console.log(`${player} HAS WON THE WAR!. 💥🎉🎊`);
   }
 }
 
