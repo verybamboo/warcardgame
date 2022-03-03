@@ -77,7 +77,7 @@ class War {
     this.deck.shuffleDeck();
   }
 
-  //deal cards to both players in sequence using shift to put the dealt card on the top of the pile each time
+  //deal cards to both players in sequence using unshift to put the dealt card on the top of the pile each time
   //a card is dealt
   dealCards() {
     for (let i = 0; i < this.deck.length; i++) {
@@ -133,6 +133,7 @@ class War {
       }
     }
   }
+
   //If a tie happens, it triggers this function to declare a war, both players will play their top 3 cards, I used a for loop to
   //start at the 0 index and stop at the 2nd index
   declareWar() {
@@ -172,10 +173,10 @@ class War {
   //if statement to check when either player hits 52, then determine them as the winner. while the condition is not met, continue looping and
   //playing the game.
   whoWon() {
-    if (this.players[0].hand.length === 52) {
-      this.winner(this.players[0].name)
-    } else if (this.players[1].hand.length === 52) {
+    if (this.players[0].hand.length === 0) {
       this.winner(this.players[1].name)
+    } else if (this.players[1].hand.length === 0) {
+      this.winner(this.players[0].name)
     }
     while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
       this.playGame();
