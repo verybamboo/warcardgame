@@ -90,13 +90,40 @@ class Game {
   }
 
   //each player plays a card from the top of their hand (an array) into a new array called played cards so they can
-  //be compared, the played card is then removed from the hands of both players and returned as last played
+  //be compared, the played card is then removed from the hands of both players and logged to show what they are
   playCard() {
     this.lastPlayed = this.deck[this.deck.length - 1]
     this.players[0].playedCards.unshift(this.players[0].hand[0]);
     this.players[1].playedCards.unshift(this.players[1].hand[0]]);
     this.players[0].hand.shift();
     this.players[1].hand.shift();
+    console.log(`${this.players[0].name} played ${this.players[0].playedCards[0].rank} of ${this.players[0].playedCards[0].suit}`);
+    console.log(`${this.players[1].name} played ${this.players[1].playedCards[0].rank} of ${this.players[1].playedCards[0].suit}`);
+    this.whoWon();
+  }
+
+  //compare both players cards and their scores, the winner with the higher score wins both cards, the method also checks for ties in
+  //which case a war will be declared. at the end of the method, it checks for the length of the hand of each player and the moment
+  //a player gets to 52, the game declares them a winner
+  whoWon() {
+    if (this.players[0].playedCards[0].score > this.players[1].playedCards[0].score) {
+      this.winCard(0, 1);
+    } else if (this.players[0].playedCards[0].score < this.players[1].playedCards[0].score) {
+      this.winCard(1, 0);
+    } else if (this.players[0].playedCards[0].score == this.players[1].playedCards[0].score) {
+      this.declareWar();
+    } else {
+      if (this.players[0].hand.length === 52) {
+        this.winner(this.players[0].name)
+      } else if (this.players[1].hand.length === 52) {
+        this.winner(this.players[1].name)
+      }
+    }
+  }
+
+  //winner has both cards put back into the bottom of their hand
+  winCard(card) {
+
   }
 
   //starts game and adds 1 to the round counter
