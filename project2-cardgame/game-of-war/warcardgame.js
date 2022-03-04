@@ -37,7 +37,7 @@ class Deck {
   makeDeck() {
     this.rank = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
     this.score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    this.suit = ['♦️', '♣️', '❤️', '♠️'];
+    this.suit = ['Diamonds', 'Clubs', 'Hearts', 'Spades'];
     this.cards = [];
     this.length = 52;
     for (let i = 0; i < this.suit.length; i++) {
@@ -96,22 +96,26 @@ class War {
   }
 
   //starts game, adds 1 to the round counter and displays current round
-  playGame() {
-    this.round += 1;
-    console.log(`Round ${this.round} start!`)
-    this.playCard();
-  }
+  // playGame() {
+  //   this.round += 1;
+  //   console.log(`Round ${this.round} start!`)
+  //   this.playCard();
+  // }
 
   //each player plays a card from the top of their hand (an array) into a new array called played cards(which each player has one) so they can
   //be compared to each other, the played card is then removed from the hands of both players, I console logged to show what they are
   playCard() {
-    this.players[0].playedCards.unshift(this.players[0].hand[0]);
-    this.players[0].hand.shift();
-    this.players[1].playedCards.unshift(this.players[1].hand[0]);
-    this.players[1].hand.shift();
-    console.log(`${this.players[0].name} played ${this.players[0].playedCards[0].rank} of ${this.players[0].playedCards[0].suit}`);
-    console.log(`${this.players[1].name} played ${this.players[1].playedCards[0].rank} of ${this.players[1].playedCards[0].suit}`);
-    this.roundWinner();
+    this.round += 1;
+    console.log(`Round ${this.round} start!`)
+    if (this.players[0].hand.length > 0 && this.players[1].hand.length > 0) {
+      this.players[0].playedCards.unshift(this.players[0].hand[0]);
+      this.players[0].hand.shift();
+      this.players[1].playedCards.unshift(this.players[1].hand[0]);
+      this.players[1].hand.shift();
+      console.log(`${this.players[0].name} played ${this.players[0].playedCards[0].rank} of ${this.players[0].playedCards[0].suit}`);
+      console.log(`${this.players[1].name} played ${this.players[1].playedCards[0].rank} of ${this.players[1].playedCards[0].suit}`);
+      this.roundWinner();
+    }
   }
 
   //compare both players cards and their scores, the winner with the higher score wins both cards, the method also checks for ties in
@@ -125,10 +129,10 @@ class War {
       this.winCard(1, 0);
       //  console.log(`${this.players[1].name} played the bigger card! They win this battle!`)
     } else {
-      if (this.players[0].hand.length === 0) {
-        this.winner(players[1].name);
-      } else if (this.players[1].length === 0) {
-        this.winner(players[0].name);
+      if (this.players[0].hand.length === 52) {
+        this.winner(this.players[0].name);
+      } else if (this.players[1].length === 52) {
+        this.winner(this.players[1].name);
       } else {
         console.log(`${this.players[0].name} and ${this.players[1].name} both played the same card. It's a tie! Time for war!`)
         this.declareWar();
@@ -152,21 +156,21 @@ class War {
   //if statement to check when either player hits 52, then determine them as the winner. while the condition is not met, continue looping and
   //playing the game.
   whoWon() {
-    if (this.players[0].hand.length === 0) {
-      this.winner(this.players[1].name)
-    } else if (this.players[1].hand.length === 0) {
+    if (this.players[0].hand.length === 52) {
       this.winner(this.players[0].name)
+    } else if (this.players[1].hand.length === 52) {
+      this.winner(this.players[1].name)
     }
 
     //as long as neither player has 52 cards in their, the game continues playing
     while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
-      this.playGame();
+      this.playCard();
     }
   }
 
   //logging the winner into console
   winner(player) {
-    console.log(`${player} HAS WON THE WAR!. 💥🎉🎊`);
+    console.log(`------${player} HAS WON THE WAR!.------`);
   }
 
   //the game crashes when the last cards being played are a tie, since the program wants to declare war and
@@ -174,27 +178,44 @@ class War {
   //If a tie happens, it triggers this function to declare a war, both players will play their top 3 cards, I used a for loop to
   //If the player has less than 4 cards, then they automatically lose
   declareWar() {
-    if (this.players[0].hand >= 4 && this.players[1].hand >= 4) {
-      for (let i = 0; i < 3; i++) {
+    var counter = 0;
+
+    while (counter < 3) {
+      counter += 1;
+      if (this.players[0].hand.length > 1 && this.players[1].hand.length > 1) {
         this.pile.unshift(this.players[0].hand[0]);
         this.players[0].hand.shift();
-      }
-      for (let i = 0; i < 3; i++) {
         this.pile.unshift(this.players[1].hand[0]);
         this.players[1].hand.shift();
+      } else {
+        if (this.players[0].hand.length === 52) {
+          this.winner(players[0].name);
+        } else if (this.players[1].length === 52) {
+          this.winner(players[1].name);
+        }
       }
     }
-
-    console.log("💥WE DECLARE WAR!!!💥");
+    console.log("------WE DECLARE WAR!!!------");
     //console.log(`${players[0].name} has ${this.players[0].hand.length} cards left.`);
     //console.log(`${players[1].name} has ${this.players[1].hand.length} cards left.`);
     this.playCard();
   }
+
 }
-
-
 //Starts game off by making a 52 card deck, shuffles it and then gives equal halves to the two players.
 //Runs the games by comparing the score value of the cards and also dealing with declaring war when two of
 //same cards are played
 let war = new War();
 war.dealCards();
+
+  // if (this.players[1].hand > 0)
+  //   for (let i = 0; i < 3; i++) {
+  //     this.pile.unshift(this.players[1].hand[0]);
+  //     this.players[1].hand.shift();
+  //   } else {
+  //   if (this.players[0].hand.length === 52) {
+  //     this.winner(players[0].name);
+  //   } else if (this.players[1].length === 52) {
+  //     this.winner(players[1].name);
+  //   }
+  // }
