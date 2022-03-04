@@ -171,33 +171,20 @@ class War {
 
   //the game crashes when the last cards being played are a tie, since the program wants to declare war and
   //there aren't any cards left to play for one player
-  // lastCard(player) {
-  //   console.log(`The last cards are tied, the game is over ${player} HAS WON THE WAR! 💥🎉🎊`);
-  //   if ((this.players[0].playedCards[0].score === this.players[1].playedCards[0].score) && (this.players[0].length === 0)) {
-  //     this.lastCard(this.players[1].name)
-  //   } else if ((this.players[0].playedCards[0].score === this.players[1].playedCards[0].score) && (this.players[1].length === 0)) {
-  //     this.lastCard(this.players[0].name)
-  //   }
-  // }
   //If a tie happens, it triggers this function to declare a war, both players will play their top 3 cards, I used a for loop to
   //If the player has less than 4 cards, then they automatically lose
   declareWar() {
-    for (let i = 0; i < 3; i++) {
-      if (i >= this.players[0].hand.length) {
-      } else {
+    if (this.players[0].hand >= 4 && this.players[1].hand >= 4) {
+      for (let i = 0; i < 3; i++) {
         this.pile.unshift(this.players[0].hand[0]);
         this.players[0].hand.shift();
-        //  console.log(`${this.players[0].name} plays} ` + this.players[1].hand.shift());
       }
-    }
-    for (let i = 0; i < 3; i++) {
-      if (i >= this.players[1].hand.length) {
-      } else {
+      for (let i = 0; i < 3; i++) {
         this.pile.unshift(this.players[1].hand[0]);
         this.players[1].hand.shift();
-        //  console.log(`${this.players[1].name} plays} ` + this.players[1].hand.shift());
       }
     }
+
     console.log("💥WE DECLARE WAR!!!💥");
     //console.log(`${players[0].name} has ${this.players[0].hand.length} cards left.`);
     //console.log(`${players[1].name} has ${this.players[1].hand.length} cards left.`);
