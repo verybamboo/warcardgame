@@ -106,15 +106,17 @@ class War {
   //be compared to each other, the played card is then removed from the hands of both players, I console logged to show what they are
   playCard() {
     this.round += 1;
-    console.log(`Round ${this.round} start!`)
     if (this.players[0].hand.length > 0 && this.players[1].hand.length > 0) {
+      console.log(`Round ${this.round} start!`)
       this.players[0].playedCards.unshift(this.players[0].hand[0]);
-      this.players[0].hand.shift();
+      this.players[0].hand.splice(0, 1);
       this.players[1].playedCards.unshift(this.players[1].hand[0]);
-      this.players[1].hand.shift();
+      this.players[1].hand.splice(0, 1);
       console.log(`${this.players[0].name} played ${this.players[0].playedCards[0].rank} of ${this.players[0].playedCards[0].suit}`);
       console.log(`${this.players[1].name} played ${this.players[1].playedCards[0].rank} of ${this.players[1].playedCards[0].suit}`);
       this.roundWinner();
+    } else {
+      this.whoWon();
     }
   }
 
@@ -129,11 +131,11 @@ class War {
       this.winCard(1, 0);
       //  console.log(`${this.players[1].name} played the bigger card! They win this battle!`)
     } else {
-      if (this.players[0].hand.length === 52) {
-        this.winner(this.players[0].name);
-      } else if (this.players[1].length === 52) {
+      if (this.players[0].hand.length === 0) {
         this.winner(this.players[1].name);
-      } else {
+      } else if (this.players[1].length === 0) {
+        this.winner(this.players[0].name);
+      } else if (this.players[0].playedCards[0].score == this.players[1].playedCards[0].score) {
         console.log(`${this.players[0].name} and ${this.players[1].name} both played the same card. It's a tie! Time for war!`)
         this.declareWar();
       }
@@ -156,16 +158,18 @@ class War {
   //if statement to check when either player hits 52, then determine them as the winner. while the condition is not met, continue looping and
   //playing the game.
   whoWon() {
-    if (this.players[0].hand.length === 52) {
-      this.winner(this.players[0].name)
-    } else if (this.players[1].hand.length === 52) {
+    if (this.players[0].hand.length === 0) {
       this.winner(this.players[1].name)
+    } else if (this.players[1].hand.length === 0) {
+      this.winner(this.players[0].name)
+    } else {
+      this.playCard();
     }
 
     //as long as neither player has 52 cards in their, the game continues playing
-    while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
-      this.playCard();
-    }
+    // while (this.players[0].hand.length !== 52 && this.players[1].hand.length !== 52) {
+    //   this.playCard();
+    // }
   }
 
   //logging the winner into console
@@ -179,19 +183,18 @@ class War {
   //If the player has less than 4 cards, then they automatically lose
   declareWar() {
     var counter = 0;
-
     while (counter < 3) {
       counter += 1;
-      if (this.players[0].hand.length > 1 && this.players[1].hand.length > 1) {
+      if (this.players[0].hand.length >= 4 && this.players[1].hand.length >= 4) {
         this.pile.unshift(this.players[0].hand[0]);
-        this.players[0].hand.shift();
+        this.players[0].hand.splice(0, 1);
         this.pile.unshift(this.players[1].hand[0]);
-        this.players[1].hand.shift();
+        this.players[1].hand.splice(0, 1);
       } else {
-        if (this.players[0].hand.length === 52) {
-          this.winner(players[0].name);
-        } else if (this.players[1].length === 52) {
+        if (this.players[0].hand.length === 0) {
           this.winner(players[1].name);
+        } else if (this.players[1].length === 0) {
+          this.winner(players[0].name);
         }
       }
     }
@@ -207,15 +210,3 @@ class War {
 //same cards are played
 let war = new War();
 war.dealCards();
-
-  // if (this.players[1].hand > 0)
-  //   for (let i = 0; i < 3; i++) {
-  //     this.pile.unshift(this.players[1].hand[0]);
-  //     this.players[1].hand.shift();
-  //   } else {
-  //   if (this.players[0].hand.length === 52) {
-  //     this.winner(players[0].name);
-  //   } else if (this.players[1].length === 52) {
-  //     this.winner(players[1].name);
-  //   }
-  // }
